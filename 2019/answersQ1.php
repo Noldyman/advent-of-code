@@ -1,5 +1,5 @@
 <?php
-$input = file_get_contents('./inputs/inputQ1.txt', 'r');
+$input = file_get_contents('./inputs/inputQ1.txt');
 $masses = explode("\n", $input);
 
 $totalFuelA = 0;
