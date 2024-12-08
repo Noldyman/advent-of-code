@@ -12,24 +12,8 @@ const formatInput = () => {
       break;
     }
   }
-  const linesWithAddedObsticle: string[][] = [];
-  for (let y = 0; y < lines.length; y++) {
-    for (let x = 0; x < lines[y].length; x++) {
-      if (["#", "^"].includes(lines[y][x])) {
-        continue;
-      }
-      linesWithAddedObsticle.push(
-        lines.map((line, index) => {
-          if (index === y) {
-            return line.slice(0, x) + "0" + line.slice(x + 1);
-          }
-          return line;
-        })
-      );
-    }
-  }
 
-  return { initialPosition, lines, linesWithAddedObsticle };
+  return { initialPosition, lines };
 };
 
 const getNextPosition = (
@@ -126,16 +110,26 @@ const createPath = (
 
 const countLoops = (
   initialPosition: string,
-  linesWithAddedObsticle: string[][]
+  uniqueVisitedPositions: string[]
 ) => {
+  const linesWithAddedObsticle: string[][] = [];
+  const uniquePositions = [...uniqueVisitedPositions];
+  uniquePositions.shift();
+
+  for (const position of uniquePositions) {
+    const [x, y] = position.split(";").map(Number) as [number, number];
+    linesWithAddedObsticle.push(
+      lines.map((line, index) => {
+        if (index === y) {
+          return line.slice(0, x) + "0" + line.slice(x + 1);
+        }
+        return line;
+      })
+    );
+  }
+
   let count = 0;
-  let number = 1;
-  let loopNr = 1;
-  console.log("LENGTH", linesWithAddedObsticle.length);
   for (const lines of linesWithAddedObsticle) {
-    // console.log("IN LOOP", loopNr);
-    loopNr++;
-    number += 1;
     const { isLoop } = createPath(initialPosition, lines, true);
     if (isLoop) {
       count += 1;
@@ -144,9 +138,9 @@ const countLoops = (
   return count;
 };
 
-const { initialPosition, lines, linesWithAddedObsticle } = formatInput();
+const { initialPosition, lines } = formatInput();
 const { uniqueVisitedPositions } = createPath(initialPosition, lines);
 console.log(`Answer to Q6A: ${uniqueVisitedPositions.length}`);
 console.log(
-  `Answer to Q6B: ${countLoops(initialPosition, linesWithAddedObsticle)}`
+  `Answer to Q6B: ${countLoops(initialPosition, uniqueVisitedPositions)}`
 );
