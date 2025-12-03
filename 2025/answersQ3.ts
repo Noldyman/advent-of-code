@@ -2,31 +2,29 @@ import fs from "fs";
 const input = fs.readFileSync("./inputs/inputQ3.txt", "utf-8");
 const banks: string[] = input.split("\n").filter((b) => !!b);
 
-const getSumOfHighestBankVoltage = () => {
+const getJoltage = (numOfBatteries: number) => {
   let sum = 0;
   for (const bank of banks) {
-    let firstDigit = 0;
-    let firstDigitIndex = 0;
+    let digits = "";
+    let startIndex = 0;
 
-    for (let i = 0; i < bank.length - 1; i++) {
-      const currNum = parseInt(bank[i]);
-      if (currNum > firstDigit) {
-        firstDigit = currNum;
-        firstDigitIndex = i;
+    while (digits.length < numOfBatteries) {
+      const remainingLength = numOfBatteries - digits.length;
+      let newDigit = 0;
+
+      for (let i = startIndex; i <= bank.length - remainingLength; i++) {
+        const currNum = parseInt(bank[i]);
+        if (currNum > newDigit) {
+          newDigit = currNum;
+          startIndex = i + 1;
+        }
       }
+      digits += newDigit.toString();
     }
-
-    let secondDigit = 0;
-    for (let y = firstDigitIndex + 1; y < bank.length; y++) {
-      const currNum = parseInt(bank[y]);
-      if (currNum > secondDigit) {
-        secondDigit = currNum;
-      }
-    }
-
-    sum += parseInt(`${firstDigit}${secondDigit}`);
+    sum += parseInt(digits);
   }
   return sum;
 };
 
-console.log("Anwer to Q3A:", getSumOfHighestBankVoltage());
+console.log("Anwer to Q3A:", getJoltage(2));
+console.log("Anwer to Q3B:", getJoltage(12));
