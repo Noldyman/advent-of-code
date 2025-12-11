@@ -32,7 +32,6 @@ const formatData = () => {
       );
       distances.push({ id1: currPoint.id, id2: comparePoint.id, distance });
     }
-    console.log(distances);
   }
   const sortedDistances = distances.sort((a, b) => a.distance - b.distance);
 
@@ -48,7 +47,7 @@ const connectShortest = (
   let connectionCount = 0;
 
   for (const distance of distances) {
-    if (connectionCount === numberOfConnections - 1) {
+    if (connectionCount === numberOfConnections) {
       break;
     }
 
@@ -70,8 +69,8 @@ const connectShortest = (
       );
       newConnectionIds.push(newLine);
       connectedIds = newConnectionIds;
-      connectionCount += 1;
     }
+    connectionCount += 1;
   }
 
   const sortedConnectionIds = connectedIds.sort((a, b) => b.length - a.length);
@@ -84,5 +83,5 @@ const connectShortest = (
 };
 
 const { points, distances } = formatData();
-// console.log(distances);
-console.log(connectShortest(1000, points, distances));
+
+console.log("Answer Q8A:", connectShortest(1000, points, distances));
